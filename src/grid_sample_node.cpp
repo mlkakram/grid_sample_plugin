@@ -73,7 +73,7 @@ void GridSamplerNode::gridSampleCB(const grid_sample_plugin::GridSampleGoalConst
       Hand* mHand = graspitCore->getWorld()->getHand(0);
       GraspableBody *gb = graspitCore->getWorld()->getGB(0);
 
-      EllipseSampler * sampler = new EllipseSampler(mHand, gb, 3.0);
+      EllipseSampler * sampler = new EllipseSampler(mHand, gb, 2.0);
       sampler->sample();
 
       std::vector<GraspPlanningState*> *samples = sampler->getResults();
@@ -81,8 +81,7 @@ void GridSamplerNode::gridSampleCB(const grid_sample_plugin::GridSampleGoalConst
       for(int i = 0; i < samples->size(); i++)
       {
           GraspPlanningState *gps = samples->at(i);
-          std::cout << "i: " << i << " " << gps->getPosition()->getCoreTran() << std::endl;
-
+          //gps->showVisualMarker();
         gps->execute(mHand);
 
         ROS_INFO("Building Pose");
@@ -106,7 +105,6 @@ void GridSamplerNode::gridSampleCB(const grid_sample_plugin::GridSampleGoalConst
         }
 
         g.pose = pose;
-        mHand->getGrasp()->update();
 
         result.grasps.push_back(g);
     }
