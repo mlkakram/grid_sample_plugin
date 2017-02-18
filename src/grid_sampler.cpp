@@ -26,6 +26,8 @@ GridSampler::GridSampler(Hand *h, GraspableBody *b, double resolution):
     halfX = 0.5*(bbmax[0] - bbmin[0]);
     halfY= 0.5*(bbmax[1] - bbmin[1]);
     halfZ = 0.5*(bbmax[2] - bbmin[2]);
+    transf object2BBoxCenter = transf::TRANSLATION(vec3(bbmin[0] + halfX, bbmin[1] + halfY, bbmin[2] + halfZ ));
+    bboxCenterInWorld = mObject->getTran() % object2BBoxCenter;
 }
 
 void
@@ -65,7 +67,7 @@ BoxGridSampler::sampleFace(vec3 x, vec3 y, vec3 z,
                 tr = tr % rotTran;
                 GraspPlanningState* seed = new GraspPlanningState(mHand);
                 seed->setObject(mObject);
-                seed->setRefTran(mObject->getTran(), false);
+                seed->setRefTran(bboxCenterInWorld, false);
                 seed->setPostureType(POSE_DOF, false);
                 seed->setPositionType(SPACE_COMPLETE, false);
                 seed->reset();
@@ -88,7 +90,7 @@ EllipseSampler::sample()
 
     //todo: should use bbox center as reference frame, not object origin
     //which could be anything
-    seed.setRefTran(mObject->getTran(), false);
+    seed.setRefTran(bboxCenterInWorld, false);
     seed.setPostureType(POSE_DOF, false);
     seed.setPositionType(SPACE_ELLIPSOID, false);
     seed.reset();

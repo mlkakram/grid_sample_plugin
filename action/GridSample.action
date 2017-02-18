@@ -1,3 +1,4 @@
+int32 resolution
 ---
 graspit_interface/Grasp[] grasps
 ---

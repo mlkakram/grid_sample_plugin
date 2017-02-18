@@ -26,6 +26,8 @@ protected:
 
     Hand* mHand;
 
+    transf bboxCenterInWorld;
+
     //! sampling resolution
     double mResolution;
 
