@@ -49,8 +49,8 @@ BoxGridSampler::sampleFace(vec3 x, vec3 y, vec3 z,
 {
     mat3 R;
     R.col(0) = x;
-    R.col(0) = y;
-    R.col(0) = z;
+    R.col(1) = y;
+    R.col(2) = z;
     int rotSamples = 2;
 
     double m1 = (2.0*sz1 - floor(2.0*sz1 / mResolution) * mResolution)/2.0;
