@@ -74,6 +74,7 @@ void GridSamplerNode::gridSampleCB(const grid_sample_plugin::GridSampleGoalConst
       GraspableBody *gb = graspitCore->getWorld()->getGB(0);
 
       EllipseSampler * sampler = new EllipseSampler(mHand, gb, goal->resolution);
+      //BoxGridSampler * sampler = new BoxGridSampler(mHand, gb, goal->resolution);
       sampler->sample();
 
       std::vector<GraspPlanningState*> *samples = sampler->getResults();
@@ -85,6 +86,8 @@ void GridSamplerNode::gridSampleCB(const grid_sample_plugin::GridSampleGoalConst
 
         geometry_msgs::Pose pose;
         transf t = mHand->getTran();
+
+        std::cout << "t: " << t << std::endl;
         pose.position.x = t.translation().x() / 1000.0;
         pose.position.y = t.translation().y() / 1000.0;;
         pose.position.z = t.translation().z() / 1000.0;;

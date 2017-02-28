@@ -33,8 +33,9 @@ GridSampler::GridSampler(Hand *h, GraspableBody *b, double resolution):
 void
 BoxGridSampler::sample()
 {
-    sampleFace( vec3(0, 1,0), vec3(-1,0,0), vec3(0,0,1) , halfX, halfZ, vec3(0,-halfY,0));
-    sampleFace( vec3(0,-1,0), vec3( 1,0,0), vec3(0,0,1) , halfX, halfZ, vec3(0, halfY,0));
+    //z from above
+    //sampleFace( vec3(0, 1,0), vec3(-1,0,0), vec3(0,0,1) , halfX, halfZ, vec3(0,-halfY,0));
+    //sampleFace( vec3(0,-1,0), vec3( 1,0,0), vec3(0,0,1) , halfX, halfZ, vec3(0, halfY,0));
 
     sampleFace( vec3(0,0, 1), vec3(0,1,0), vec3(-1,0,0) , halfY, halfX, vec3(0,0,-halfZ));
     sampleFace( vec3(0,0,-1), vec3(0,1,0), vec3( 1,0,0) , halfY, halfX, vec3(0,0, halfZ));
@@ -49,9 +50,9 @@ BoxGridSampler::sampleFace(vec3 x, vec3 y, vec3 z,
 {
     mat3 R;
     R.col(0) = x;
-    R.col(0) = y;
-    R.col(0) = z;
-    int rotSamples = 2;
+    R.col(1) = y;
+    R.col(2) = z;
+    int rotSamples = 1;
 
     double m1 = (2.0*sz1 - floor(2.0*sz1 / mResolution) * mResolution)/2.0;
     while (m1 < 2*sz1){
@@ -62,8 +63,9 @@ BoxGridSampler::sampleFace(vec3 x, vec3 y, vec3 z,
             myTln = myTln + (m2 - sz2)* z;
             transf tr(R, myTln);
             for(int rot=0; rot < rotSamples; rot++) {
-                double angle = M_PI * ((double)rot) / rotSamples;
+                double angle = M_PI * ((double)rot) / rotSamples + (M_PI/2.0);
                 transf rotTran = transf::AXIS_ANGLE_ROTATION(angle, vec3(1,0,0));
+                std::cout << "rotTran: " << rotTran <<std::endl;
                 tr = tr % rotTran;
                 GraspPlanningState* seed = new GraspPlanningState(mHand);
                 seed->setObject(mObject);
@@ -110,19 +112,17 @@ EllipseSampler::sample()
 void
 EllipseSampler::gridEllipsoidSampling(const GraspPlanningState &seed)
 {
-    double aRes = 2.0 * halfX / mResolution;
-    double bRes = 2.0 * halfY / mResolution;
-    double cRes = 2.0 * halfZ / mResolution;
+    double aRes = 2.0 * halfX ;
+    double bRes = 2.0 * halfY ;
+    double cRes = 2.0 * halfZ ;
 
-    for (double i=0.5; i<mResolution; i+=1.0) {
-        for(double j=0.5; j<mResolution; j+=1.0) {
-            addCartesianSamples(seed,  halfX, -halfY+i*bRes, -halfZ+j*cRes);
-            addCartesianSamples(seed, -halfX, -halfY+i*bRes, -halfZ+j*cRes);
-            addCartesianSamples(seed, -halfX+i*aRes, halfY , -halfZ+j*cRes);
-            addCartesianSamples(seed, -halfX+i*aRes,-halfY , -halfZ+j*cRes);
-            addCartesianSamples(seed, -halfX+i*aRes, -halfY+j*bRes , halfZ);
-            addCartesianSamples(seed, -halfX+i*aRes, -halfY+j*bRes ,-halfZ);
-        }
+    double step = (2*M_PI) / mResolution;
+
+    for (double roll=step; roll<=(2*M_PI); roll+=step) {
+
+        double x = cos(roll);
+        double y = sin(roll);
+        addCartesianSamples(seed, x*aRes, y*bRes , 0);
     }
 }
 
@@ -139,20 +139,15 @@ EllipseSampler::addCartesianSamples(const GraspPlanningState &seed, double x, do
     double gamma = atan2(y/halfY, x/halfX);
 
     //sample roll angle as well
-    for (int m=0; m<mResolution; m++) {
+    //for (int m=0; m<mResolution; m++) {
         //only sample from 0 to almost PI, as the HH is symmetric
-        double tau = M_PI * ((double)m) / mResolution;
+        double tau = M_PI/2.0;//* ((double)m) / mResolution;
         GraspPlanningState *newState = new GraspPlanningState(&seed);
         newState->getPosition()->getVariable("tau")->setValue(tau);
         newState->getPosition()->getVariable("gamma")->setValue(gamma);
         newState->getPosition()->getVariable("beta")->setValue(beta);
         mSamples.push_back(newState);
-    }
+        std::cout << "new sample tran: " << newState->getPosition()->getCoreTran() << std::endl;
+    //}
 }
-
-
-
-
-
-
 
