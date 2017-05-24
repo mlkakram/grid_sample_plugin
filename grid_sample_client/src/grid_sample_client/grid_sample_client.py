@@ -39,7 +39,7 @@ class GridSampleClient(object):
         grasps = []
         for i, pre_grasp in enumerate(pre_grasps):
             gc.toggleAllCollisions(False)
-            gc.forceRobotDof([0,0,0,0])
+            gc.forceRobotDof(pre_grasp.dofs)
             gc.setRobotPose(pre_grasp.pose)
 
             gc.toggleAllCollisions(True)
@@ -49,18 +49,22 @@ class GridSampleClient(object):
             robot_state = gc.getRobot(0)
                                                                                                                                                                                  
             try:
-                volume_quality = gc.computeQuality().volume
+                quality = gc.computeQuality()
+                volume_quality = quality.volume
+                epsilon_quality = quality.epsilon
             except:
                 volume_quality = -1
+                epsilon_quality = -1
         
             result = gc.getRobot(0)
             grasp = copy.deepcopy(pre_grasp)
-            grasp.pose = gc.getRobot(0).robot.pose
+            grasp.pose = robot_state.robot.pose
             grasp.volume_quality = volume_quality
-            grasps.append((volume_quality, grasp))
+            grasp.epsilon_quality = epsilon_quality
+            grasp.dofs = robot_state.robot.dofs
+            grasps.append(grasp)
 
-        grasps.sort()
-        grasps.reverse()
+        grasps = sorted(grasps, key=lambda x: x.volume_quality, reverse=True)
                 
         return grasps
 
