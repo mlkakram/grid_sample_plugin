@@ -50,7 +50,7 @@ int GridSamplerNode::init(int argc, char** argv)
 
     nh = new ros::NodeHandle(node_name);
 
-    gridSampleActionServer = new actionlib::SimpleActionServer<grid_sample_plugin::GridSampleAction>(*nh, "gridSample",
+    gridSampleActionServer = new actionlib::SimpleActionServer<grid_sample_msgs::GridSampleAction>(*nh, "gridSample",
                                                                                             boost::bind(&GridSamplerNode::gridSampleCB, this, _1), false);
     gridSampleActionServer->start();
 
@@ -66,9 +66,9 @@ int GridSamplerNode::mainLoop()
 } 
 
 
-void GridSamplerNode::gridSampleCB(const grid_sample_plugin::GridSampleGoalConstPtr &goal)
+void GridSamplerNode::gridSampleCB(const grid_sample_msgs::GridSampleGoalConstPtr &goal)
 {
-      grid_sample_plugin::GridSampleResult result;
+      grid_sample_msgs::GridSampleResult result;
 
       Hand* mHand = graspitCore->getWorld()->getHand(0);
       GraspableBody *gb = graspitCore->getWorld()->getGB(0);
