@@ -6,7 +6,7 @@
 #include <actionlib/server/simple_action_server.h>
 
 // ActionServer includes
-#include <grid_sample_plugin/GridSampleAction.h>
+#include <grid_sample_msgs/GridSampleAction.h>
 
 namespace GridSamplerNode
 {
@@ -18,10 +18,10 @@ private:
   ros::NodeHandle *nh;
 
   // ActionServer declarations
-  actionlib::SimpleActionServer<grid_sample_plugin::GridSampleAction> *gridSampleActionServer;
+  actionlib::SimpleActionServer<grid_sample_msgs::GridSampleAction> *gridSampleActionServer;
 
   //ActionServer callbacks
-  void gridSampleCB(const grid_sample_plugin::GridSampleGoalConstPtr &goal);
+  void gridSampleCB(const grid_sample_msgs::GridSampleGoalConstPtr &goal);
 
 public: 
   GridSamplerNode(){}
