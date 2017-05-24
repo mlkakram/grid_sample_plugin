@@ -5,7 +5,6 @@ project(grid_sample_plugin)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS 
-  message_generation 
   roscpp 
   actionlib 
   actionlib_msgs 
@@ -14,6 +13,7 @@ find_package(catkin REQUIRED COMPONENTS
   sensor_msgs
   graspit
   graspit_interface
+  grid_sample_msgs
 ) 
 
 ## System dependencies are found with CMake's conventions
@@ -64,22 +64,22 @@ find_package(Qt4 REQUIRED COMPONENTS QtCore)
 # )
 
 ## Generate actions in the 'action' folder
- add_action_files(
-   DIRECTORY action
-   FILES
-   GridSample.action
- )
+ # add_action_files(
+ #   DIRECTORY action
+ #   FILES
+ #   GridSample.action
+ # )
 
 ## Generate added messages and services with any dependencies listed here
-generate_messages(
-   DEPENDENCIES
-   std_msgs  # Or other packages containing msgs
-   geometry_msgs
-   actionlib_msgs
-   sensor_msgs
-   actionlib
-   graspit_interface
- )
+# generate_messages(
+#    DEPENDENCIES
+#    std_msgs  # Or other packages containing msgs
+#    geometry_msgs
+#    actionlib_msgs
+#    sensor_msgs
+#    actionlib
+#    graspit_interface
+#  )
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -113,7 +113,7 @@ generate_messages(
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES grid_sample_plugin
-  CATKIN_DEPENDS geometry_msgs std_msgs message_runtime
+  CATKIN_DEPENDS geometry_msgs std_msgs grid_sample_msgs
 #  DEPENDS system_lib
 )
 
