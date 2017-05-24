@@ -41,6 +41,7 @@
   <!--   <test_depend>gtest</test_depend> -->
   <buildtool_depend>catkin</buildtool_depend>
 
+  <build_depend>grid_sample_msgs</build_depend>
   <build_depend>geometry_msgs</build_depend>
   <build_depend>graspit_interface</build_depend>
   <build_depend>message_generation</build_depend>
@@ -49,6 +50,7 @@
   <run_depend>geometry_msgs</run_depend>
   <run_depend>message_runtime</run_depend>
   <run_depend>std_msgs</run_depend>
+  <run_depend>grid_sample_msgs</run_depend>
 
 
 
