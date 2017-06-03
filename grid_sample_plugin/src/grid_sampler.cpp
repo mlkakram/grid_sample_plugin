@@ -155,29 +155,85 @@ EllipseSampler::addCartesianSamples(const GraspPlanningState &seed, double x, do
 
 
 
+// void
+// AboveSampler::sample()
+// {
+//     double step = (2*M_PI) / mResolution;
+//     double approachDistance = halfZ ;
+
+//     vec3 rotAxis = vec3(0,0,1); // rotate around Z axis
+//     transf tr = transf(Quaternion(0,0,1,0), (halfZ+approachDistance) * rotAxis);
+
+//     for (double roll=0; roll<(2*M_PI); roll+=step) {
+//         std::cout << "step: \t" << roll/M_PI*180 <<std::endl;
+
+//         // sample from top center rotating hand around roll
+//         transf tr2 = transf::RPY(0, 0, roll);
+//         tr2 = tr % tr2;
+
+//         GraspPlanningState* seed = new GraspPlanningState(mHand);
+//         seed->setObject(mObject);
+//         seed->setRefTran(mObject->getTran(), false);
+//         seed->setPostureType(POSE_DOF, false);
+//         seed->setPositionType(SPACE_COMPLETE, false);
+//         seed->reset();
+//         seed->getPosition()->setTran(tr2);
+//         mSamples.push_back(seed);
+//     }
+// }
+
 void
 AboveSampler::sample()
 {
+    //generate a list of grasps by sampling an ellipsoid around the object
+    GraspPlanningState seed(mHand);
+    seed.setObject(mObject);
+
+    //todo: should use bbox center as reference frame, not object origin
+    //which could be anything
+    seed.setRefTran(bboxCenterInWorld, false);
+    seed.setPostureType(POSE_DOF, false);
+    seed.setPositionType(SPACE_ELLIPSOID, false);
+    seed.reset();
+
+    //we don't want to sample distance
+    seed.getPosition()->getVariable("dist")->setValue(0.0);
+    seed.getPosition()->getVariable("dist")->setFixed(true);
+
+    //grid based sampling. Does somewhat better.
+    gridEllipsoidSampling(seed);
+}
+
+
+/*! Samples an ellipsoid by sampling uniformly a grid with the same aspect
+    ratio and projecting the resulting points on the ellipsoid. Not ideal,
+    but at least much better then sampling angular variables directly */
+void
+AboveSampler::gridEllipsoidSampling(const GraspPlanningState &seed)
+{
+    double aRes = 2.0 * halfX ;
+    double bRes = 2.0 * halfY ;
+    double cRes = 2.0 * halfZ ;
+
     double step = (2*M_PI) / mResolution;
-    double approachDistance = halfZ ;
 
-    vec3 rotAxis = vec3(0,0,1); // rotate around Z axis
-    transf tr = transf(Quaternion(0,0,1,0), (halfZ+approachDistance) * rotAxis);
+    for (double roll=0; roll<=(2*M_PI); roll+=step) {
 
-    for (double roll=0; roll<(2*M_PI); roll+=step) {
-        std::cout << "step: \t" << roll/M_PI*180 <<std::endl;
+        double x = 0;
+        double y = 0;
+        double z = cRes;
 
-        // sample from top center rotating hand around roll
-        transf tr2 = transf::RPY(0, 0, roll);
-        tr2 = tr % tr2;
+//        addCartesianSamples(seed, 0, 0 , cRes);
 
-        GraspPlanningState* seed = new GraspPlanningState(mHand);
-        seed->setObject(mObject);
-        seed->setRefTran(mObject->getTran(), false);
-        seed->setPostureType(POSE_DOF, false);
-        seed->setPositionType(SPACE_COMPLETE, false);
-        seed->reset();
-        seed->getPosition()->setTran(tr2);
-        mSamples.push_back(seed);
+        double beta = asin(z / sqrt(x*x + y*y + z*z));
+        double gamma = atan2(y/halfY, x/halfX);
+
+        double tau = roll;//* ((double)m) / mResolution;
+        GraspPlanningState *newState = new GraspPlanningState(&seed);
+        newState->getPosition()->getVariable("tau")->setValue(tau);
+        newState->getPosition()->getVariable("gamma")->setValue(gamma);
+        newState->getPosition()->getVariable("beta")->setValue(beta);
+        mSamples.push_back(newState);
+        std::cout << "new sample tran: " << newState->getPosition()->getCoreTran() << std::endl;
     }
 }

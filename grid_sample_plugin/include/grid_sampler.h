@@ -88,4 +88,9 @@ public:
 
     }
     void sample();
+
+protected:
+
+    //! Samples an ellipsoid using a grid-based method to generate pre-grasps.
+    void gridEllipsoidSampling(const GraspPlanningState &seed);
 };
