@@ -153,3 +153,31 @@ EllipseSampler::addCartesianSamples(const GraspPlanningState &seed, double x, do
     //}
 }
 
+
+
+void
+AboveSampler::sample()
+{
+    double step = (2*M_PI) / mResolution;
+    double approachDistance = halfZ ;
+
+    vec3 rotAxis = vec3(0,0,1); // rotate around Z axis
+    transf tr = transf(Quaternion(0,0,1,0), (halfZ+approachDistance) * rotAxis);
+
+    for (double roll=0; roll<(2*M_PI); roll+=step) {
+        std::cout << "step: \t" << roll/M_PI*180 <<std::endl;
+
+        // sample from top center rotating hand around roll
+        transf tr2 = transf::RPY(0, 0, roll);
+        tr2 = tr % tr2;
+
+        GraspPlanningState* seed = new GraspPlanningState(mHand);
+        seed->setObject(mObject);
+        seed->setRefTran(mObject->getTran(), false);
+        seed->setPostureType(POSE_DOF, false);
+        seed->setPositionType(SPACE_COMPLETE, false);
+        seed->reset();
+        seed->getPosition()->setTran(tr2);
+        mSamples.push_back(seed);
+    }
+}

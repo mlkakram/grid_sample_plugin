@@ -75,3 +75,17 @@ protected:
     //! Samples an ellipsoid using a grid-based method to generate pre-grasps.
     void gridEllipsoidSampling(const GraspPlanningState &seed);
 };
+
+
+class AboveSampler : public GridSampler
+{
+
+public:
+
+    AboveSampler(Hand* h, GraspableBody *b, double resolution):
+        GridSampler(h, b, resolution)
+    {
+
+    }
+    void sample();
+};

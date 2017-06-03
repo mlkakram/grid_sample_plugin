@@ -73,7 +73,8 @@ void GridSamplerNode::gridSampleCB(const grid_sample_msgs::GridSampleGoalConstPt
       Hand* mHand = graspitCore->getWorld()->getHand(0);
       GraspableBody *gb = graspitCore->getWorld()->getGB(0);
 
-      EllipseSampler * sampler = new EllipseSampler(mHand, gb, goal->resolution);
+      // EllipseSampler * sampler = new EllipseSampler(mHand, gb, goal->resolution);
+      AboveSampler * sampler = new AboveSampler(mHand, gb, goal->resolution);
       //BoxGridSampler * sampler = new BoxGridSampler(mHand, gb, goal->resolution);
       sampler->sample();
 
