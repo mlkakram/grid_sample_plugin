@@ -1,4 +1,5 @@
 int32 resolution
+uint8 sampling_type
 ---
 graspit_interface/Grasp[] grasps
 ---

@@ -18,7 +18,7 @@ gc = graspit_commander.GraspitCommander()
 gc.loadWorld('plannerMug')
 
 import grid_sample_client
-pre_grasps = grid_sample_client.GridSampleClient.computePreGrasps(10)
+pre_grasps = grid_sample_client.GridSampleClient.computePreGrasps(10, 0)	# resolution, sampling_type
 grasps = grid_sample_client.GridSampleClient.evaluatePreGrasps(pre_grasps.grasps)
 
 ```

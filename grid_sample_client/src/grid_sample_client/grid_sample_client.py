@@ -15,7 +15,7 @@ class GridSampleClient(object):
     GRASPIT_NODE_NAME = "/graspit/"
 
     @classmethod
-    def computePreGrasps(cls, resolution=2):
+    def computePreGrasps(cls, resolution=2, sampling_type=0):
                    
         try:
             rospy.init_node(cls.ROS_NODE_NAME, anonymous=True)
@@ -25,7 +25,7 @@ class GridSampleClient(object):
         client = actionlib.SimpleActionClient(GridSampleClient.GRASPIT_NODE_NAME + 'gridSample', GridSampleAction)
         
         client.wait_for_server(timeout=rospy.Duration(1.0))
-        goal = GridSampleGoal(resolution)
+        goal = GridSampleGoal(resolution, sampling_type)
 
         client.send_goal_and_wait(goal)
 
