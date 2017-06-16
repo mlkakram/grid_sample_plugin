@@ -19,7 +19,7 @@ class GridSampleClient(object):
                    
         try:
             rospy.init_node(cls.ROS_NODE_NAME, anonymous=True)
-        except ROSException:
+        except rospy.ROSException:
             pass
 
         client = actionlib.SimpleActionClient(GridSampleClient.GRASPIT_NODE_NAME + 'gridSample', GridSampleAction)
