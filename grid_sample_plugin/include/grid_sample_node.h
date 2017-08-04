@@ -2,7 +2,7 @@
 #define _GRASPIT_INTERFACE_H_ 
 
 #include <ros/ros.h>
-#include <graspit_source/include/plugin.h>
+#include "graspit/plugin.h"
 #include <actionlib/server/simple_action_server.h>
 
 // ActionServer includes

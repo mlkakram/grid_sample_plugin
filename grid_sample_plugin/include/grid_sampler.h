@@ -1,5 +1,5 @@
 #include <vector>
-#include "graspit_source/include/matvec3D.h"
+#include "graspit/matvec3D.h"
 
 class GraspPlanningState;
 class GraspableBody;

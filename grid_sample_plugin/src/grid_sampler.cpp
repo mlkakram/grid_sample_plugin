@@ -3,11 +3,11 @@
 #include <Inventor/actions/SoGetBoundingBoxAction.h>
 
 //for the bounding box and drawing forces
-#include "graspit_source/include/graspitCore.h"
-#include "graspit_source/include/body.h"
-#include "graspit_source/include/robot.h"
-#include "graspit_source/include/EGPlanner/searchState.h"
-#include "ivmgr.h"
+#include "graspit/graspitCore.h"
+#include "graspit/body.h"
+#include "graspit/robot.h"
+#include "graspit/EGPlanner/searchState.h"
+#include "graspit/ivmgr.h"
 
 
 GridSampler::GridSampler(Hand *h, GraspableBody *b, double resolution):

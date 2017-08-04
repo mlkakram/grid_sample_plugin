@@ -3,27 +3,27 @@
 #include "grid_sampler.h"
 
 //GraspIt! includes
-#include "graspit_source/include/EGPlanner/searchState.h"
-#include "graspit_source/include/EGPlanner/simAnnPlanner.h"
+#include "graspit/EGPlanner/searchState.h"
+#include "graspit/EGPlanner/simAnnPlanner.h"
 
 //Message includes
 #include <graspit_interface/Grasp.h>
 #include <geometry_msgs/Pose.h>
 #include <geometry_msgs/Quaternion.h>
 
-#include "graspit_source/include/graspitCore.h"
-#include "graspit_source/include/robot.h"
-#include "graspit_source/include/world.h"
-#include "graspit_source/include/ivmgr.h"
+#include "graspit/graspitCore.h"
+#include "graspit/robot.h"
+#include "graspit/world.h"
+#include "graspit/ivmgr.h"
 
-#include "graspit_source/include/quality.h"
-#include "graspit_source/include/grasp.h"
-#include "graspit_source/include/EGPlanner/searchState.h"
-#include "graspit_source/include/EGPlanner/egPlanner.h"
-#include "graspit_source/include/EGPlanner/simAnnPlanner.h"
-#include "graspit_source/include/EGPlanner/guidedPlanner.h"
+#include "graspit/quality/quality.h"
+#include "graspit/grasp.h"
+#include "graspit/EGPlanner/searchState.h"
+#include "graspit/EGPlanner/egPlanner.h"
+#include "graspit/EGPlanner/simAnnPlanner.h"
+#include "graspit/EGPlanner/guidedPlanner.h"
 
-#include "cmdline/cmdline.h"
+#include "graspit/cmdline/cmdline.h"
 
 
 namespace GridSamplerNode

@@ -11,13 +11,13 @@ find_package(catkin REQUIRED COMPONENTS
   geometry_msgs 
   std_msgs 
   sensor_msgs
-  graspit
   graspit_interface
   grid_sample_msgs
 ) 
 
 ## System dependencies are found with CMake's conventions
 find_package(Qt4 REQUIRED COMPONENTS QtCore)
+find_package(graspit)
 
 
 ## Uncomment this if the package has a setup.py. This macro ensures
@@ -125,6 +125,7 @@ catkin_package(
 ## Your package locations should be listed before other locations
 include_directories(include
   ${catkin_INCLUDE_DIRS}
+  ${GRASPIT_INCLUDES_DIRS}
   ${QT_INCLUDES}
 )
 

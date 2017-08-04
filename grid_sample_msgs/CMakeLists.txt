@@ -15,7 +15,6 @@ find_package(catkin REQUIRED COMPONENTS
   geometry_msgs 
   std_msgs 
   sensor_msgs
-  graspit
   graspit_interface
 ) 
 
