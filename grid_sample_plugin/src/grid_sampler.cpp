@@ -126,11 +126,12 @@ EllipseSampler::gridEllipsoidSampling(const GraspPlanningState &seed)
 {
     double step = (2*M_PI) / mResolution;
 
-   double beta = 0;
-   double tau = M_PI/2.0;
-   for (double gamma=step; gamma<=(2*M_PI); gamma+=step) {
-       addCartesianSamples(seed, beta, gamma, tau);
-   }
+    double tau = M_PI/2.0;
+    for (double gamma=step; gamma<=(2*M_PI); gamma+=step) {
+        for (double beta=(-M_PI/2); beta<=(M_PI/2); beta+=step) {
+            addCartesianSamples(seed, beta, gamma, tau);
+        }
+    }
 }
 
 void
@@ -155,6 +156,21 @@ AboveSampler::gridEllipsoidSampling(const GraspPlanningState &seed)
    double gamma = 0;
    double beta = M_PI/2.0;
    for (double tau=step; tau<=(2*M_PI); tau+=step) {
+       addCartesianSamples(seed, beta, gamma, tau);
+   }
+}
+
+/*! Samples an ellipsoid by sampling uniformly a grid with the same aspect
+    ratio and projecting the resulting points on the ellipsoid. Not ideal,
+    but at least much better then sampling angular variables directly */
+void
+AroundSampler::gridEllipsoidSampling(const GraspPlanningState &seed)
+{
+    double step = (2*M_PI) / mResolution;
+
+   double beta = 0;
+   double tau = M_PI/2.0;
+   for (double gamma=step; gamma<=(2*M_PI); gamma+=step) {
        addCartesianSamples(seed, beta, gamma, tau);
    }
 }

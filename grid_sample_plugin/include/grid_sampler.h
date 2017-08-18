@@ -11,6 +11,8 @@ class GridSampler{
 public:
 
     GridSampler(Hand* h, GraspableBody *b, double resolution);
+
+    virtual ~GridSampler(){}
     //!
     virtual void sample() = 0;
 
@@ -74,6 +76,24 @@ protected:
 
     //! Samples an ellipsoid using a grid-based method to generate pre-grasps.
     virtual void gridEllipsoidSampling(const GraspPlanningState &seed);
+};
+
+
+class AroundSampler : public EllipseSampler
+{
+
+public:
+
+    AroundSampler(Hand* h, GraspableBody *b, double resolution):
+        EllipseSampler(h, b, resolution)
+    {
+
+    }
+
+protected:
+
+    //! Samples an ellipsoid using a grid-based method to generate pre-grasps.
+    void gridEllipsoidSampling(const GraspPlanningState &seed);
 };
 
 

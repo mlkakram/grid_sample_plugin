@@ -76,19 +76,22 @@ void GridSamplerNode::gridSampleCB(const grid_sample_msgs::GridSampleGoalConstPt
       GridSampler * sampler;
       switch(goal->sampling_type) {
         case 0:
-          sampler = new EllipseSampler(mHand, gb, goal->resolution);
+          sampler = new AroundSampler(mHand, gb, goal->resolution);
           break;
         case 1:
           sampler = new AboveSampler(mHand, gb, goal->resolution);
+          break;
+        case 2:
+          sampler = new EllipseSampler(mHand, gb, goal->resolution);
+          break;
+        case 3:
+          sampler = new BoxGridSampler(mHand, gb, goal->resolution);
           break;
         default:
           std::cout << "SAMPLER TYPE NOT SPECIFIED... Using default!!!!!!!\n";
           sampler = new EllipseSampler(mHand, gb, goal->resolution);
           break;
       }
-      // EllipseSampler * sampler = new EllipseSampler(mHand, gb, goal->resolution);
-      // // AboveSampler * sampler = new AboveSampler(mHand, gb, goal->resolution);
-      // //BoxGridSampler * sampler = new BoxGridSampler(mHand, gb, goal->resolution);
       sampler->sample();
 
       std::vector<GraspPlanningState*> *samples = sampler->getResults();
