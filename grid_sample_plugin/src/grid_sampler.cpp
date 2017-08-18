@@ -103,6 +103,16 @@ EllipseSampler::sample()
     seed.getPosition()->getVariable("dist")->setValue(0.0);
     seed.getPosition()->getVariable("dist")->setFixed(true);
 
+    // set the dimension of the ellipse
+    double size = 2.5;
+    double aRes = size * halfX ;
+    double bRes = size * halfY ;
+    double cRes = size * halfZ ;
+
+    seed.getPosition()->setParameter("a", aRes);
+    seed.getPosition()->setParameter("b", bRes);
+    seed.getPosition()->setParameter("c", cRes);
+
     //grid based sampling. Does somewhat better.
     gridEllipsoidSampling(seed);
 }
@@ -114,43 +124,24 @@ EllipseSampler::sample()
 void
 EllipseSampler::gridEllipsoidSampling(const GraspPlanningState &seed)
 {
-    double aRes = 2.0 * halfX ;
-    double bRes = 2.0 * halfY ;
-    double cRes = 2.0 * halfZ ;
-
     double step = (2*M_PI) / mResolution;
 
-    for (double roll=step; roll<=(2*M_PI); roll+=step) {
-
-        double x = cos(roll);
-        double y = sin(roll);
-        addCartesianSamples(seed, x*aRes, y*bRes , 0);
-    }
+   double beta = 0;
+   double tau = M_PI/2.0;
+   for (double gamma=step; gamma<=(2*M_PI); gamma+=step) {
+       addCartesianSamples(seed, beta, gamma, tau);
+   }
 }
 
 void
-EllipseSampler::addCartesianSamples(const GraspPlanningState &seed, double x, double y, double z)
+EllipseSampler::addCartesianSamples(const GraspPlanningState &seed, double beta, double gamma, double tau)
 {
-    //double c = seed.readPosition()->getParameter("c");
-    //compute angular values
-    //from HandObjectStateImpl:
-    //x =  a * cos(beta) * cos(gamma);
-    //y =  b * cos(beta) * sin(gamma);
-    //z =  c * sin(beta);
-    double beta = asin(z / sqrt(x*x + y*y + z*z));
-    double gamma = atan2(y/halfY, x/halfX);
-
-    //sample roll angle as well
-    //for (int m=0; m<mResolution; m++) {
-        //only sample from 0 to almost PI, as the HH is symmetric
-        double tau = M_PI/2.0;//* ((double)m) / mResolution;
         GraspPlanningState *newState = new GraspPlanningState(&seed);
         newState->getPosition()->getVariable("tau")->setValue(tau);
         newState->getPosition()->getVariable("gamma")->setValue(gamma);
         newState->getPosition()->getVariable("beta")->setValue(beta);
         mSamples.push_back(newState);
         std::cout << "new sample tran: " << newState->getPosition()->getCoreTran() << std::endl;
-    //}
 }
 
 
