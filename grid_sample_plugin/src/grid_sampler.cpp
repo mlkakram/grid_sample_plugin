@@ -191,6 +191,16 @@ AboveSampler::sample()
     seed.getPosition()->getVariable("dist")->setValue(0.0);
     seed.getPosition()->getVariable("dist")->setFixed(true);
 
+    // set the dimension of the ellipse
+    double size = 2.5;
+    double aRes = size * halfX ;
+    double bRes = size * halfY ;
+    double cRes = size * halfZ ;
+
+    seed.getPosition()->setParameter("a", aRes);
+    seed.getPosition()->setParameter("b", bRes);
+    seed.getPosition()->setParameter("c", cRes);
+
     //grid based sampling. Does somewhat better.
     gridEllipsoidSampling(seed);
 }
@@ -202,29 +212,22 @@ AboveSampler::sample()
 void
 AboveSampler::gridEllipsoidSampling(const GraspPlanningState &seed)
 {
-    double aRes = 2.0 * halfX ;
-    double bRes = 2.0 * halfY ;
-    double cRes = 2.0 * halfZ ;
-
     double step = (2*M_PI) / mResolution;
 
-    for (double roll=0; roll<=(2*M_PI); roll+=step) {
+   double gamma = 0;
+   double beta = M_PI/2.0;
+   for (double tau=step; tau<=(2*M_PI); tau+=step) {
+       addCartesianSamples(seed, beta, gamma, tau);
+   }
+}
 
-        double x = 0;
-        double y = 0;
-        double z = cRes;
-
-//        addCartesianSamples(seed, 0, 0 , cRes);
-
-        double beta = asin(z / sqrt(x*x + y*y + z*z));
-        double gamma = atan2(y/halfY, x/halfX);
-
-        double tau = roll;//* ((double)m) / mResolution;
+void
+AboveSampler::addCartesianSamples(const GraspPlanningState &seed, double beta, double gamma, double tau)
+{
         GraspPlanningState *newState = new GraspPlanningState(&seed);
         newState->getPosition()->getVariable("tau")->setValue(tau);
         newState->getPosition()->getVariable("gamma")->setValue(gamma);
         newState->getPosition()->getVariable("beta")->setValue(beta);
         mSamples.push_back(newState);
         std::cout << "new sample tran: " << newState->getPosition()->getCoreTran() << std::endl;
-    }
 }

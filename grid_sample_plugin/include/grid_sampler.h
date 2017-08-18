@@ -70,7 +70,7 @@ public:
 protected:
 
     //! Helper function for the above
-    void addCartesianSamples(const GraspPlanningState &seed, double x, double y, double z);
+    void addCartesianSamples(const GraspPlanningState &seed, double beta, double gamma, double tau);
 
     //! Samples an ellipsoid using a grid-based method to generate pre-grasps.
     void gridEllipsoidSampling(const GraspPlanningState &seed);
@@ -90,6 +90,9 @@ public:
     void sample();
 
 protected:
+
+    //! Helper function for the above
+    void addCartesianSamples(const GraspPlanningState &seed, double beta, double gamma, double tau);
 
     //! Samples an ellipsoid using a grid-based method to generate pre-grasps.
     void gridEllipsoidSampling(const GraspPlanningState &seed);
