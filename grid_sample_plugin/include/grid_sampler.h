@@ -73,26 +73,22 @@ protected:
     void addCartesianSamples(const GraspPlanningState &seed, double beta, double gamma, double tau);
 
     //! Samples an ellipsoid using a grid-based method to generate pre-grasps.
-    void gridEllipsoidSampling(const GraspPlanningState &seed);
+    virtual void gridEllipsoidSampling(const GraspPlanningState &seed);
 };
 
 
-class AboveSampler : public GridSampler
+class AboveSampler : public EllipseSampler
 {
 
 public:
 
     AboveSampler(Hand* h, GraspableBody *b, double resolution):
-        GridSampler(h, b, resolution)
+        EllipseSampler(h, b, resolution)
     {
 
     }
-    void sample();
 
 protected:
-
-    //! Helper function for the above
-    void addCartesianSamples(const GraspPlanningState &seed, double beta, double gamma, double tau);
 
     //! Samples an ellipsoid using a grid-based method to generate pre-grasps.
     void gridEllipsoidSampling(const GraspPlanningState &seed);

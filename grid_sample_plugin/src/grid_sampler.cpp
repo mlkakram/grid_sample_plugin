@@ -144,68 +144,6 @@ EllipseSampler::addCartesianSamples(const GraspPlanningState &seed, double beta,
         std::cout << "new sample tran: " << newState->getPosition()->getCoreTran() << std::endl;
 }
 
-
-
-// void
-// AboveSampler::sample()
-// {
-//     double step = (2*M_PI) / mResolution;
-//     double approachDistance = halfZ ;
-
-//     vec3 rotAxis = vec3(0,0,1); // rotate around Z axis
-//     transf tr = transf(Quaternion(0,0,1,0), (halfZ+approachDistance) * rotAxis);
-
-//     for (double roll=0; roll<(2*M_PI); roll+=step) {
-//         std::cout << "step: \t" << roll/M_PI*180 <<std::endl;
-
-//         // sample from top center rotating hand around roll
-//         transf tr2 = transf::RPY(0, 0, roll);
-//         tr2 = tr % tr2;
-
-//         GraspPlanningState* seed = new GraspPlanningState(mHand);
-//         seed->setObject(mObject);
-//         seed->setRefTran(mObject->getTran(), false);
-//         seed->setPostureType(POSE_DOF, false);
-//         seed->setPositionType(SPACE_COMPLETE, false);
-//         seed->reset();
-//         seed->getPosition()->setTran(tr2);
-//         mSamples.push_back(seed);
-//     }
-// }
-
-void
-AboveSampler::sample()
-{
-    //generate a list of grasps by sampling an ellipsoid around the object
-    GraspPlanningState seed(mHand);
-    seed.setObject(mObject);
-
-    //todo: should use bbox center as reference frame, not object origin
-    //which could be anything
-    seed.setRefTran(bboxCenterInWorld, false);
-    seed.setPostureType(POSE_DOF, false);
-    seed.setPositionType(SPACE_ELLIPSOID, false);
-    seed.reset();
-
-    //we don't want to sample distance
-    seed.getPosition()->getVariable("dist")->setValue(0.0);
-    seed.getPosition()->getVariable("dist")->setFixed(true);
-
-    // set the dimension of the ellipse
-    double size = 2.5;
-    double aRes = size * halfX ;
-    double bRes = size * halfY ;
-    double cRes = size * halfZ ;
-
-    seed.getPosition()->setParameter("a", aRes);
-    seed.getPosition()->setParameter("b", bRes);
-    seed.getPosition()->setParameter("c", cRes);
-
-    //grid based sampling. Does somewhat better.
-    gridEllipsoidSampling(seed);
-}
-
-
 /*! Samples an ellipsoid by sampling uniformly a grid with the same aspect
     ratio and projecting the resulting points on the ellipsoid. Not ideal,
     but at least much better then sampling angular variables directly */
@@ -219,15 +157,4 @@ AboveSampler::gridEllipsoidSampling(const GraspPlanningState &seed)
    for (double tau=step; tau<=(2*M_PI); tau+=step) {
        addCartesianSamples(seed, beta, gamma, tau);
    }
-}
-
-void
-AboveSampler::addCartesianSamples(const GraspPlanningState &seed, double beta, double gamma, double tau)
-{
-        GraspPlanningState *newState = new GraspPlanningState(&seed);
-        newState->getPosition()->getVariable("tau")->setValue(tau);
-        newState->getPosition()->getVariable("gamma")->setValue(gamma);
-        newState->getPosition()->getVariable("beta")->setValue(beta);
-        mSamples.push_back(newState);
-        std::cout << "new sample tran: " << newState->getPosition()->getCoreTran() << std::endl;
 }
