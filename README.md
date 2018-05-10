@@ -1,10 +1,9 @@
 ## grid_sample_plugin
 
-
 Note that this package depends on graspit ros packages see: [graspit_interface](
 https://github.com/graspit-simulator/graspit_interface)
 
-###Example Usage:
+### Example Usage:
 In one terminal:
 ```bash
 roslaunch grid_sample_plugin grid_sample_plugin.launch
