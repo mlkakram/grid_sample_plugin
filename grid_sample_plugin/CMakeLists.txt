@@ -16,7 +16,7 @@ find_package(catkin REQUIRED COMPONENTS
 ) 
 
 ## System dependencies are found with CMake's conventions
-find_package(Qt4 REQUIRED COMPONENTS QtCore)
+find_package(Qt5 COMPONENTS Core Widgets REQUIRED)
 find_package(graspit)
 
 
@@ -152,6 +152,7 @@ add_dependencies(grid_sample_plugin ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin
 ## Specify libraries to link a library or executable target against
 target_link_libraries(grid_sample_plugin
    ${catkin_LIBRARIES}
+   Qt5::Core Qt5::Widgets
  )
 
 #############
