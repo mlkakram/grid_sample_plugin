@@ -71,4 +71,47 @@ class GridSampleClient(object):
                 
         return grasps
 
-  
+    #trying to do the simualted annealing on the grid search of an object 
+    @classmethod
+    def simannPreGrasps(cls, pre_grasps, pre_grasp_dofs=None):
+        gc = graspit_commander.GraspitCommander()
+
+        grasps = []
+        for i, pre_grasp in enumerate(pre_grasps):
+            gc.toggleAllCollisions(False)
+            if not pre_grasp_dofs:
+                gc.forceRobotDof(pre_grasp.dofs)
+            else:
+                gc.forceRobotDof(pre_grasp_dofs)
+            gc.setRobotPose(pre_grasp.pose)
+
+            gc.toggleAllCollisions(True)
+            gc.findInitialContact()
+
+            #start the simulated annealing STRICT_AUTO_GRASP_ENERGY
+            st = SearchSpace()
+            st.type = 3
+            gc.planGrasps(search_energy="CONTACT_ENERGY",max_steps=50000,search_space=st)
+
+            gc.autoGrasp()
+            robot_state = gc.getRobot(0)
+                                                                                                                                                                                 
+            try:
+                quality = gc.computeQuality()
+                volume_quality = quality.volume
+                epsilon_quality = quality.epsilon
+            except:
+                volume_quality = -1
+                epsilon_quality = -1
+        
+            result = gc.getRobot(0)
+            grasp = copy.deepcopy(pre_grasp)
+            grasp.pose = robot_state.robot.pose
+            grasp.volume_quality = volume_quality
+            grasp.epsilon_quality = epsilon_quality
+            grasp.dofs = robot_state.robot.dofs
+            grasps.append(grasp)
+
+        grasps = sorted(grasps, key=lambda x: x.volume_quality, reverse=True)
+                
+        return grasps
