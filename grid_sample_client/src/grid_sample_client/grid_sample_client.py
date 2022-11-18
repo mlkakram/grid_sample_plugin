@@ -2,8 +2,10 @@ import rospy
 import actionlib
 import copy 
 
-from graspit_interface.msg import Grasp
+from graspit_interface.msg import Grasp, SearchSpace
 from grid_sample_msgs.msg import GridSampleAction, GridSampleGoal
+import graspit_commander
+
 
 
 class GridSampleClient(object): 
